@@ -11,7 +11,6 @@ setup(name='expt',
       author_email='arjoonn.94@gmail.com',
       license='MIT',
       packages=['expt'],
-      install_requires=['ipython', 'jupyter'],
       entry_points={'console_scripts': ['expt=expt.cli:main']},
       keywords=['expt', 'manager', 'experiment', 'hypothesis', 'notebook'],
       zip_safe=False)

@@ -96,8 +96,8 @@ def stop(blob):
 def summary():
     bench = list(os.listdir(BENCH))
     message = 'Summary of WorkBench\n' + '='*20 + '\n'*3
-    message += 'ID  |no.note| blob\n'
-    message += '----|-------|-----\n'
+    message += 'ID  |no.of.notes| blob\n'
+    message += '----|-----------|-----\n'
     for blob in bench:
         path = os.path.join(BENCH, blob, 'meta.json')
         with open(path, 'r') as fl:
@@ -105,9 +105,12 @@ def summary():
         path = os.path.join(BENCH, blob, 'notes.json')
         with open(path, 'r') as fl:
             notes = json.load(fl)
-        message += '{:4}| {:6}| {}\n'.format(meta['id'],
+        message += '{:4}| {:10}| [{blob}]({blobpath})\n'.format(meta['id'],
                                              len(notes.keys()),
-                                             blob)
+                                             blob=blob,
+                                             blobpath=os.path.join(BENCH, blob)
+                                             )
+    message += '\n'*2 + 'Archive Status\n'
     message += '-'*20 + '\n'*2
     archive = list(os.listdir(ARX))
     message += '{:5} hypothesis in archive'.format(len(archive))
