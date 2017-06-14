@@ -49,7 +49,7 @@ def new_hyp(title, blob=None):
 
 def list_hyp():
     message = 'Hypothesis Experiments\n'
-    message += '='*20 + '\n'
+    message += '='*20 + '\n'*3
     message += '-'*20 + '\n'
     message += 'Current Bench' + '\n'
     message += '-'*20 + '\n'
@@ -89,7 +89,5 @@ def note(blob, msg=None):
 
 
 def stop(blob):
-    path = os.path.join(BENCH, blob, 'pid')
-    with open(path, 'r') as fl:
-        pid = fl.read().strip()
-    os.system('kill {}'.format(pid))
+    # TODO: Clean way to run jupyter and stop
+    pass

@@ -83,8 +83,7 @@ def main():
             work(blob)
         elif cmd == 'note':
             check_initiated()
-            if len(argv) == 3:
-                msg = argv[2]
+            msg = argv[2] if len(argv) == 3 else None
             blob = resolve_blob_part(argv[1])
             note(blob, msg)
         elif cmd == 'stop':

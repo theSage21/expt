@@ -3,4 +3,4 @@ class InvalidCall(Exception):
 
 
 BENCH, ARX = 'bench', 'archive'
-working_command = 'cd {path} && jupyter notebook & &>/dev/null && echo $!>pid'
+working_command = 'cd {path} && jupyter notebook &>/dev/null &'
