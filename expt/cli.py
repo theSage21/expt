@@ -1,5 +1,8 @@
 import sys
-from .main import resolve_blob_part
+import os
+from .main import resolve_blob_part, new_hyp
+from .main import list_hyp, work, note, stop
+from .config import BENCH, ARX
 
 
 help_ = '''
@@ -10,6 +13,10 @@ maximal match.
 
 expt
     Display this help and exit
+expt init
+    Initiate a folder with the structures needed for expt to work
+expt list
+    List the hypothesis in the workbench
 expt new <hypothesis title>
     Create a new hypothesis with given title
 expt work <hypothesis blob>
@@ -30,6 +37,14 @@ expt report [all]
 '''
 
 
+def check_initiated():
+    if not(os.path.exists(BENCH) and os.path.exists(ARX)):
+        print('This does not look initiated')
+        print('Perhaps you should run the command')
+        print('$expt init')
+        sys.exit(1)
+
+
 def main():
     argv = list(sys.argv[1:])
     print_help_and_exit = False
@@ -38,23 +53,44 @@ def main():
     elif len(argv) == 1:
         cmd = argv[0]
         if cmd == 'summary':
-            pass
+            check_initiated()
+            pass  # TODO
         elif cmd == 'report':
-            pass
+            check_initiated()
+            pass  # TODO
+        elif cmd == 'init':
+            if not os.path.exists(BENCH):
+                print('Creating ', BENCH)
+                os.mkdir(BENCH)
+            if not os.path.exists(ARX):
+                print('Creating ', ARX)
+                os.mkdir(ARX)
+            print('Initiated this directory for expt use.')
+        elif cmd == 'list':
+            check_initiated()
+            list_hyp()
         else:
             print_help_and_exit = True
     elif len(argv) >= 2:
-        blob_part = argv[1]
-        blob = resolve_blob_part(blob_part)
+        cmd = argv[0]
         if cmd == 'new':
-            pass
+            check_initiated()
+            title = argv[1]
+            new_hyp(title)
         elif cmd == 'work':
-            pass
+            check_initiated()
+            blob = resolve_blob_part(argv[1])
+            work(blob)
         elif cmd == 'note':
+            check_initiated()
             if len(argv) == 3:
                 msg = argv[2]
+            blob = resolve_blob_part(argv[1])
+            note(blob, msg)
         elif cmd == 'stop':
-            pass
+            check_initiated()
+            blob = resolve_blob_part(argv[1])
+            stop(blob)
         else:
             print_help_and_exit = True
     if print_help_and_exit:

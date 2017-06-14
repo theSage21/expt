@@ -1,0 +1,3 @@
+[console_scripts]
+expt = expt.cli:main
+

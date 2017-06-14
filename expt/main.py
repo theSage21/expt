@@ -1,25 +1,20 @@
 import os
 import json
 from datetime import datetime
-
-
-class InvalidCall(Exception):
-    pass
+from .config import BENCH, ARX, InvalidCall, working_command
 
 
 now = datetime.now
-BENCH, ARX = 'bench', 'archive'
-bench = list(os.listdir(BENCH))
-archive = list(os.listdir(ARX))
-
-
 # -----------tools
+
+
 def clean(string):
     whitelist = 'abcdefghijklmnopqrstuvwxyz1234567890_-'
     return ''.join(i for i in string.lower() if i in whitelist)
 
 
 def resolve_blob_part(part):
+    bench = list(os.listdir(BENCH))
     relevant = [i for i in bench if part in i]
     if len(relevant) != 1:
         raise InvalidCall('Blob resolution failed')
@@ -29,6 +24,7 @@ def resolve_blob_part(part):
 
 # ----------- actual functions
 def new_hyp(title, blob=None):
+    bench = list(os.listdir(BENCH))
     blob = clean(title) if blob is None else blob
     print('Using blob: {}'.format(blob))
     data = {'id': len(bench) + 1,
@@ -51,15 +47,19 @@ def new_hyp(title, blob=None):
     print('Complete')
 
 
-def list_hyp(all_):
-    message = 'Hypothesis Experiments'
+def list_hyp():
+    message = 'Hypothesis Experiments\n'
+    message += '='*20 + '\n'
     message += '-'*20 + '\n'
     message += 'Current Bench' + '\n'
     message += '-'*20 + '\n'
+    bench = list(os.listdir(BENCH))
+    archive = list(os.listdir(ARX))
     for name in bench:
         path = os.path.join(BENCH, name)
         with open(os.path.join(path, 'meta.json'), 'r') as fl:
             id_ = json.load(fl)['id']
+        message += '{:5}. {}\n'.format(id_, name)
     message += '-'*20 + '\n'
     message += 'Archived\n'
     message += '-'*20 + '\n'
@@ -74,8 +74,7 @@ def list_hyp(all_):
 def work(blob):
     path = os.path.join(BENCH, blob)
     # TODO: Make compatible with non-NIX
-    command = 'cd {path} && jupyter notebook & &>/dev/null && echo $!>pid'
-    os.system(command.format(path=path))
+    os.system(working_command.format(path=path))
 
 
 def note(blob, msg=None):
