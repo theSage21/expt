@@ -91,3 +91,36 @@ def note(blob, msg=None):
 def stop(blob):
     # TODO: Clean way to run jupyter and stop
     pass
+
+
+def summary():
+    bench = list(os.listdir(BENCH))
+    message = 'Summary of WorkBench\n' + '='*20 + '\n'*3
+    message += 'ID  |no.note| blob\n'
+    message += '----|-------|-----\n'
+    for blob in bench:
+        path = os.path.join(BENCH, blob, 'meta.json')
+        with open(path, 'r') as fl:
+            meta = json.load(fl)
+        path = os.path.join(BENCH, blob, 'notes.json')
+        with open(path, 'r') as fl:
+            notes = json.load(fl)
+        message += '{:4}| {:6}| {}\n'.format(meta['id'],
+                                             len(notes.keys()),
+                                             blob)
+    message += '-'*20 + '\n'*2
+    archive = list(os.listdir(ARX))
+    message += '{:5} hypothesis in archive'.format(len(archive))
+    print(message)
+
+
+def report():
+    bench = list(os.listdir(BENCH))
+    archive = list(os.listdir(ARX))
+    # TODO
+
+
+def archive(blob):
+    path = os.path.join(BENCH, blob)
+    np = os.path.join(ARX, blob)
+    os.system('mv {path} {newpath}'.format(path=path, newpath=np))

@@ -2,6 +2,7 @@ import sys
 import os
 from .main import resolve_blob_part, new_hyp
 from .main import list_hyp, work, note, stop
+from .main import summary, report, archive
 from .config import BENCH, ARX
 
 
@@ -28,12 +29,10 @@ expt stop <hypothesis blob>
     Stop working on a hypothesis
 expt archive <hypothesis blob>
     Archive a hypothesis permanently
-expt summary [all]
+expt summary
     Create summaries of all experiments in the workbench.
-    If all is specified, use archives too
-expt report [all]
-    Create reports of all experiments in the workbench.
-    If all is specified, use archives too
+expt report
+    Create detailed reports of all experiments in the workbench and archive.
 '''
 
 
@@ -54,10 +53,10 @@ def main():
         cmd = argv[0]
         if cmd == 'summary':
             check_initiated()
-            pass  # TODO
+            summary()
         elif cmd == 'report':
             check_initiated()
-            pass  # TODO
+            report()
         elif cmd == 'init':
             if not os.path.exists(BENCH):
                 print('Creating ', BENCH)
@@ -90,6 +89,9 @@ def main():
             check_initiated()
             blob = resolve_blob_part(argv[1])
             stop(blob)
+        elif cmd == 'archive':
+            blob = resolve_blob_part(argv[1])
+            archive(blob)
         else:
             print_help_and_exit = True
     if print_help_and_exit:
